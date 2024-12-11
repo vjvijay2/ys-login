@@ -1,24 +1,28 @@
-const mongoose=require("mongoose")
-mongoose.connect("mongodb://localhost:27017/loginpage")
-.then(()=>{
-    console.log("mongodb connected");
-})
-.catch(()=>{
-    console.log('failed');
-})
+const mongoose = require('mongoose');
 
+// MongoDB Atlas connection URI
+const uri = "mongodb+srv://vijayanbu:12345@cluster0.swbpx.mongodb.net/user?retryWrites=true&w=majority";
 
-const newSchema=new mongoose.Schema({
-    email:{
-        type:String,
-        required:true
-    },
-    password:{
-        type:String,
-        required:true
-    }
-})
+// Connect to the MongoDB Atlas database
+mongoose.connect(uri, { useNewUrlParser: true, useUnifiedTopology: true })
+  .then(() => console.log("MongoDB Atlas connected to 'user' database successfully"))
+  .catch((err) => console.error("MongoDB Atlas connection error: ", err));
 
-const collection = mongoose.model("collection",newSchema)
+// Define a new schema for user registration (email and password)
+const newSchema = new mongoose.Schema({
+  email: {
+    type: String,
+    required: true, // Ensure that email is provided
+    unique: true     // Ensure that email is unique
+  },
+  password: {
+    type: String,
+    required: true // Ensure that password is provided
+  }
+});
 
-module.exports=collection
+// Create a model based on the schema
+const User = mongoose.model("User", newSchema);
+
+// Export the model to be used in other parts of the application
+module.exports = User;
